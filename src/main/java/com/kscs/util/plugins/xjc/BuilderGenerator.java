@@ -365,7 +365,9 @@ class BuilderGenerator {
 					generateWithMethodJavadoc(withMethodInner, paramInner);
 					if (this.implement) {
 						final JType objectFactory = this.pluginContext.codeModel.ref("ObjectFactory");
-						final JInvocation val = JExpr._new(objectFactory).invoke("create" + this.definedClass.name() + propertyName).arg(param);
+						// Try to use same mechanism as JaxB to deduce ObjectFactory's create method name.
+						// Cannot deduce from propertyName due to JaxB seemingly ignoring it for the generation of the ObjectFactory
+						final JInvocation val = JExpr._new(objectFactory).invoke("create" + ((DefinedPropertyOutline) propertyOutline).getSqueezedName()).arg(param);
 						withMethodInner.body().assign(JExpr._this().ref(builderField), val);
 						withMethodInner.body()._return(JExpr._this());
 					}

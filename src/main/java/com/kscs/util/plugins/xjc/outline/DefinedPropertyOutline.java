@@ -27,6 +27,7 @@ package com.kscs.util.plugins.xjc.outline;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
@@ -34,6 +35,9 @@ import com.sun.codemodel.JClass;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JType;
+import com.sun.tools.xjc.model.CElement;
+import com.sun.tools.xjc.model.CElementInfo;
+import com.sun.tools.xjc.model.CReferencePropertyInfo;
 import com.sun.tools.xjc.model.nav.NClass;
 import com.sun.tools.xjc.model.nav.NType;
 import com.sun.tools.xjc.outline.FieldOutline;
@@ -109,6 +113,18 @@ public class DefinedPropertyOutline implements PropertyOutline {
 			propertyName = "content";
 		}
 		return this.fieldOutline.parent().implClass.fields().get(propertyName);
+	}
+
+	public String getSqueezedName() {
+		final Set<CElement> elements = ((CReferencePropertyInfo) fieldOutline.getPropertyInfo()).getElements();
+
+		if (elements.size() != 1) {
+			throw new RuntimeException("Unexpected number of property info objects. Expected 1 but was " + elements.size());
+		}
+
+		final CElementInfo ce = (CElementInfo) elements.iterator().next();
+
+		return ce.getSqueezedName();
 	}
 
 	public boolean hasGetter() {
