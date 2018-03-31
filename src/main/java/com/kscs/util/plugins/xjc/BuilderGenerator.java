@@ -609,7 +609,8 @@ class BuilderGenerator {
 				._return(JExpr._this());
 
 			final JMethod builderCopyOfBuilderMethod = this.builderClass.raw.method(JMod.PUBLIC, this.builderClass.type, PluginContext.BUILD_COPY_METHOD_NAME);
-			JVar paramOtherBuilder = builderCopyOfBuilderMethod.param(JMod.FINAL, this.builderClass.raw, BuilderGenerator.OTHER_PARAM_NAME);
+			JVar paramOtherBuilder = builderCopyOfBuilderMethod.param(JMod.FINAL,
+					this.builderClass.raw.narrow(this.builderClass.raw.owner().ref(Object.class).wildcard()), BuilderGenerator.OTHER_PARAM_NAME);
 			builderCopyOfBuilderMethod.body()._return(JExpr.invoke(builderCopyOfValueMethod).arg(JExpr.invoke(paramOtherBuilder, PluginContext.BUILD_METHOD_NAME)));
 		}
 	}
